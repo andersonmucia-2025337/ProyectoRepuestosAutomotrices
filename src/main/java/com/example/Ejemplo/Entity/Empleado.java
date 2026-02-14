@@ -1,8 +1,7 @@
-package com.example.Ejemplo.Model;
+package com.example.Ejemplo.Entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 /**
