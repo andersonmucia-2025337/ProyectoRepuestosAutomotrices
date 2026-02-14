@@ -1,6 +1,6 @@
 package com.example.Ejemplo.Service;
 
-import com.example.Ejemplo.Model.Empleado;
+import com.example.Ejemplo.Entity.Empleado;
 import com.example.Ejemplo.Repository.EmpleadoRepository;
 import org.springframework.stereotype.Service;
 
