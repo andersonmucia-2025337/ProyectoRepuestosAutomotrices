@@ -1,6 +1,6 @@
 package com.example.Ejemplo.Controller;
 
-import com.example.Ejemplo.Model.Empleado;
+import com.example.Ejemplo.Entity.Empleado;
 import com.example.Ejemplo.Service.EmpleadoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class EmpleadoController {
         try {
             Empleado createdEmpleado = empleadoService.saveEmpleado(empleado);
             return new ResponseEntity<>(createdEmpleado, HttpStatus.CREATED);
-        } catch (Exception e) {  // Cambié de RuntimeException a Exception
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -48,7 +48,7 @@ public class EmpleadoController {
         try {
             Empleado updatedEmpleado = empleadoService.updateEmpleado(id, empleado);
             return ResponseEntity.ok(updatedEmpleado);
-        } catch (Exception e) {  // Cambié de RuntimeException a Exception
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -58,19 +58,18 @@ public class EmpleadoController {
         try {
             empleadoService.deleteEmpleado(id);
             return ResponseEntity.ok("Empleado con ID " + id + " eliminado correctamente");
-        } catch (Exception e) {  // Cambié de RuntimeException a Exception
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // MANEJADOR GLOBAL DE EXCEPCIONES - AÑADE ESTO
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex) {
-        // Log del error en consola
+
         System.err.println("Error capturado en handleAllExceptions: " + ex.getMessage());
         ex.printStackTrace();
 
-        // Devuelve el mensaje de error al cliente
+
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
