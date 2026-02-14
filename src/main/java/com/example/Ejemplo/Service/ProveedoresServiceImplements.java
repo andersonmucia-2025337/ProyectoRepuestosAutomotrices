@@ -3,7 +3,6 @@ package com.example.Ejemplo.Service;
 import com.example.Ejemplo.Entity.Proveedores;
 import com.example.Ejemplo.Repository.ProveedoresRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -13,7 +12,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
 
     private final ProveedoresRepository proveedorRepository;
 
-    // Validaciones
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[A-Za-z0-9._%+-]+@(gmail\\.com|email\\.com|yahoo\\.com)$"
     );
@@ -29,18 +27,16 @@ public class ProveedoresServiceImplements implements ProveedoresService {
     }
 
     @Override
-    public Proveedores getProveedorById(Integer id) {
+    public Proveedores getIdProveedores(Integer id) {
         return proveedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proveedor con ID " + id + " no encontrado"));
     }
 
     @Override
-    public Proveedores saveProveedor(Proveedores proveedores) throws RuntimeException {
+    public Proveedores saveProveedores(Proveedores proveedores) throws RuntimeException {
         try {
-            // Validar datos
             validarProveedor(proveedores);
 
-            // Validar email único
             List<Proveedores> todos = proveedorRepository.findAll();
             for (Proveedores p : todos) {
                 if (p.getEmailProveedor().equalsIgnoreCase(proveedores.getEmailProveedor())) {
@@ -48,7 +44,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
                 }
             }
 
-            // Validar teléfono único
             for (Proveedores p : todos) {
                 if (p.getTelefonoProveedor().equals(proveedores.getTelefonoProveedor())) {
                     throw new RuntimeException("Ya existe un proveedor con el teléfono: " + proveedores.getTelefonoProveedor());
@@ -67,14 +62,11 @@ public class ProveedoresServiceImplements implements ProveedoresService {
     @Override
     public Proveedores updateProveedor(Integer id, Proveedores proveedor) throws RuntimeException {
         try {
-            // Verificar si existe
             Proveedores proveedorExistente = proveedorRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Proveedor con ID " + id + " no encontrado"));
 
-            // Validar datos
             validarProveedor(proveedor);
 
-            // Validar email único (excluyendo este proveedor)
             List<Proveedores> todos = proveedorRepository.findAll();
             for (Proveedores p : todos) {
                 if (!p.getIdProveedor().equals(id) &&
@@ -83,7 +75,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
                 }
             }
 
-            // Validar teléfono único (excluyendo este proveedor)
             for (Proveedores p : todos) {
                 if (!p.getIdProveedor().equals(id) &&
                         p.getTelefonoProveedor().equals(proveedor.getTelefonoProveedor())) {
@@ -91,7 +82,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
                 }
             }
 
-            // Actualizar campos
             proveedorExistente.setNombreProveedor(proveedor.getNombreProveedor());
             proveedorExistente.setTelefonoProveedor(proveedor.getTelefonoProveedor());
             proveedorExistente.setDireccion(proveedor.getDireccion());
@@ -120,9 +110,7 @@ public class ProveedoresServiceImplements implements ProveedoresService {
         }
     }
 
-    // Método privado de validación
     private void validarProveedor(Proveedores proveedor) {
-        // Validar nombre
         if (proveedor.getNombreProveedor() == null ||
                 proveedor.getNombreProveedor().trim().isEmpty()) {
             throw new RuntimeException("El nombre del proveedor no puede estar vacío");
@@ -133,7 +121,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
             throw new RuntimeException("El nombre del proveedor debe tener al menos 3 caracteres");
         }
 
-        // Validar teléfono
         if (proveedor.getTelefonoProveedor() == null) {
             throw new RuntimeException("El teléfono no puede estar vacío");
         }
@@ -142,7 +129,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
             throw new RuntimeException("El teléfono debe tener 8 dígitos numéricos");
         }
 
-        // Validar dirección
         if (proveedor.getDireccion() == null ||
                 proveedor.getDireccion().trim().isEmpty()) {
             throw new RuntimeException("La dirección no puede estar vacía");
@@ -153,7 +139,6 @@ public class ProveedoresServiceImplements implements ProveedoresService {
             throw new RuntimeException("La dirección debe tener al menos 5 caracteres");
         }
 
-        // Validar email
         if (proveedor.getEmailProveedor() == null ||
                 proveedor.getEmailProveedor().trim().isEmpty()) {
             throw new RuntimeException("El email no puede estar vacío");
